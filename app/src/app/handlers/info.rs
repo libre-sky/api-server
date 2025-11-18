@@ -1,6 +1,4 @@
-use axum::{Json, response::IntoResponse};
-
-use crate::api_models::{ApiResult, ServerInfo};
+use crate::api_models::ServerInfo;
 
 pub async fn handle_info() -> ServerInfo {
     ServerInfo::new()
