@@ -5,7 +5,7 @@ pub mod middleware;
 use axum::{Router, routing::get};
 
 use crate::api_models::{ContentType, to_response};
-use crate::app::middleware::{LogLayer, setup_logger};
+use crate::app::middleware::{LogLayer, default_log_settings};
 use crate::app::{config::Config, handlers::handle_info};
 
 #[derive(Default, Debug, Clone)]
@@ -15,10 +15,8 @@ pub(crate) struct App {
 
 impl App {
     pub(crate) async fn build(&self) -> Result<Router<()>, ()> {
-        setup_logger();
-        let Config { log_level, .. } = self.cfg;
         let r = Router::<()>::new();
-        Ok(self.build_routes(r).layer(LogLayer::new(log_level)))
+        self.configure_logging(self.build_routes(r))
     }
 
     fn build_routes(&self, r: Router<()>) -> Router {
@@ -34,5 +32,17 @@ impl App {
             .await
             .unwrap();
         axum::serve(listener, r).await.unwrap()
+    }
+
+    fn configure_logging(&self, r: Router<()>) -> Result<Router<()>, ()> {
+        let Config { log_level, .. } = self.cfg;
+        let log_settings = default_log_settings();
+        match log_settings.apply() {
+            Ok(_) => Ok(r.layer(LogLayer::new(log_level))),
+            Err(e) => {
+                println!("log setup failed:{e}");
+                Err(())
+            }
+        }
     }
 }
