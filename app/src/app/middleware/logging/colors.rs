@@ -1,8 +1,11 @@
 use std::time::SystemTime;
 
-use fern::colors::{Color, ColoredLevelConfig};
+use fern::{
+    Dispatch,
+    colors::{Color, ColoredLevelConfig},
+};
 
-pub(crate) fn setup_logger() {
+pub(crate) fn default_log_settings() -> Dispatch {
     fern::Dispatch::new()
         .format(|out, message, record| {
             let colors = ColoredLevelConfig::new()
@@ -31,6 +34,4 @@ pub(crate) fn setup_logger() {
         })
         .level(log::LevelFilter::Trace)
         .chain(std::io::stderr())
-        .apply()
-        .unwrap();
 }
