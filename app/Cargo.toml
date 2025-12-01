@@ -9,7 +9,7 @@ fern = { version = "0.7.1", features = ["chrono", "colored"] }
 futures-util = "0.3.31"
 humantime = "2.3.0"
 log = { version = "0.4.28", features = ["std"] }
-sea-orm = "1.1.19"
+sea-orm = "2.0.0-rc.18"
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = { version = "1.0.145", features = ["arbitrary_precision"] }
 sqlx = { version = "0.8.6", features = ["runtime-tokio-rustls", "postgres"] }
